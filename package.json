@@ -1,0 +1,32 @@
+{
+  "name": "bottle-service",
+  "description": "Instant web applications restored from ServiceWorker cache",
+  "main": "index.js",
+  "version": "0.0.0-semantic-release",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bahmutov/bottle-service.git"
+  },
+  "keywords": [
+    "service",
+    "worker",
+    "serviceWorker",
+    "cache",
+    "hydrate",
+    "web",
+    "performance"
+  ],
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bahmutov/bottle-service/issues"
+  },
+  "homepage": "https://github.com/bahmutov/bottle-service#readme",
+  "devDependencies": {
+    "semantic-release": "^4.3.5"
+  }
+}
