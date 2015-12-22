@@ -3,19 +3,27 @@
 */
 /* global self, Response, Promise */
 var myName = 'bottle-service';
+var cacheName = myName + '-v1';
 console.log(myName, 'startup');
 
 var dataStore;
 
 console.log('data store at start', dataStore)
 
-self.addEventListener('install', function () {
+self.addEventListener('install', function (event) {
   console.log(myName, 'installed');
   dataStore = {
     name: 'bottle-service',
     storeName: 'fragments',
     html: ''
   }
+
+  /*
+  event.waitUntil(
+    caches.open(cacheName).then(function(cache) {
+      return cache.addAll(['index.html'])
+    })
+  )*/
 });
 
 self.addEventListener('activate', function () {
@@ -43,9 +51,40 @@ function isIndexPageRequest(event) {
 }
 
 self.addEventListener('fetch', function (event) {
-  if (isIndexPageRequest(event)) {
-    console.log(myName, 'fetch', event.request.url);
+  if (!isIndexPageRequest(event)) {
+    return fetch(event.request);
   }
+
+  console.log(myName, 'fetching index page', event.request.url);
+
+  // text/html; charset=UTF-8
+
+  return fetch(event.request).then(function (response) {
+    if (dataStore.html) {
+      console.log('fetched latest', response.url, 'need to update')
+      console.log('element "%s" with html "%s" ...',
+        dataStore.id, dataStore.html.substr(0, 5))
+    }
+    return response
+  })
+
+  /*
+  event.respondWith(
+    caches.open(cacheName).then(function(cache) {
+      return cache.match(event.request).then(function(response) {
+        if (response) {
+          console.log('found cached response', response.url)
+          return response
+        }
+        fetch(event.request).then(function(response) {
+          console.log('fetched and caching response', response.url)
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
+    })
+   );
+  */
 
   /*
   mocks = mocks || {};
@@ -104,25 +143,8 @@ self.onmessage = function onMessage(event) {
       console.log('saved new html for id', event.data.id)
       return;
     }
-
-    /*
-    case 'list': {
-      // TODO: would it make more sense to use self-addressed?
-      event.source.postMessage({
-        cmd: 'list',
-        mocks: mocks
-      }, '*');
-      return;
-    }*/
-
-    /*
     default: {
-      if (event.data.url) {
-        console.log('registering mock response for', event.data.method, 'url', event.data.url);
-
-        // mocks = mocks || {};
-        // mocks[event.data.url] = event.data;
-      }
-    }*/
+      console.error(name, 'unknown command', event.data)
+    }
   }
 };
