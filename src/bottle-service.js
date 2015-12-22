@@ -61,7 +61,7 @@ self.addEventListener('fetch', function (event) {
 
   event.respondWith(
     fetch(event.request).then(function (response) {
-      if (dataStore.html) {
+      if (dataStore && dataStore.html) {
         console.log('fetched latest', response.url, 'need to update')
         console.log('element "%s" with html "%s" ...',
           dataStore.id, dataStore.html.substr(0, 5))
