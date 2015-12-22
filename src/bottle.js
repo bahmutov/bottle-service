@@ -76,7 +76,20 @@
       });
     }
 
-    root.bottleService = {}
+    root.bottleService = {
+      refill: function refill(id) {
+        console.log('sending html back to the bottle service for element with id', id)
+        var el = document.getElementById(id)
+        la(el, 'could not find element with id', id)
+        var html = el.outerHTML
+        console.log(html)
+        send({
+          cmd: 'refill',
+          html: html,
+          id: id
+        })
+      }
+    }
 
     registration.active.onmessage = function messageFromServiceWorker(e) {
       console.log('received message from the service worker', e);

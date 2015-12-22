@@ -13,12 +13,38 @@ self.addEventListener('activate', function () {
   console.log(myName, 'activated');
 });
 
+// data store stuff
+var dataStore = {
+  name: 'bottle-service',
+  storeName: 'fragments',
+  html: ''
+}
+
+/*
+var request = indexedDB.open(dataStore.name, 1.0)
+request.onsuccess(function (e) {
+  console.log('opened indexed db', dataStore.name)
+  dataStore.db = e.target.result
+  var store = dataStore.db.createObjectStore(dataStore.storeName, { keyPath: 'timestamp' })
+})
+
 // Note: the mocks stay valid even during website reload
 var mocks;
+*/
+
+function isIndexPageRequest(event) {
+  // TODO remove hardcoded index.html
+  return event &&
+    event.request &&
+    event.request.url === 'http://localhost:3004/'
+}
 
 self.addEventListener('fetch', function (event) {
-  console.log(myName, 'fetch', event);
+  if (isIndexPageRequest(event)) {
+    console.log(myName, 'fetch', event.request.url);
+  }
 
+  /*
   mocks = mocks || {};
 
   Object.keys(mocks).forEach(function (url) {
@@ -50,7 +76,7 @@ self.addEventListener('fetch', function (event) {
         event.respondWith(response);
       }
     }
-  });
+  });*/
 
 });
 
@@ -59,12 +85,17 @@ self.addEventListener('fetch', function (event) {
 self.onmessage = function onMessage(event) {
   console.log('message to bottle-service worker', event.data);
 
-  switch (event.data) {
+  switch (event.data.cmd) {
     case 'clear': {
-      mocks = {};
+      dataStore.html = ''
       return;
+    },
+    case 'refill': {
+      dataStore.html = event.data.html
+      dataStore.id = event.data.id
     }
 
+    /*
     case 'list': {
       // TODO: would it make more sense to use self-addressed?
       event.source.postMessage({
@@ -72,15 +103,16 @@ self.onmessage = function onMessage(event) {
         mocks: mocks
       }, '*');
       return;
-    }
+    }*/
 
+    /*
     default: {
       if (event.data.url) {
         console.log('registering mock response for', event.data.method, 'url', event.data.url);
 
-        mocks = mocks || {};
-        mocks[event.data.url] = event.data;
+        // mocks = mocks || {};
+        // mocks[event.data.url] = event.data;
       }
-    }
+    }*/
   }
 };

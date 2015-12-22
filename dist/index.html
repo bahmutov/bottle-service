@@ -8,6 +8,17 @@
 <body>
   <h1>bottle-service</h1>
 
+  <div id="app"></div>
+
+  <button id="add">Add item to the list</button>
+
   <script src="bottle.js"></script>
+  <script>
+    console.log('page code')
+    document.getElementById('add').addEventListener('click', function () {
+      console.log('adding item to the list')
+      bottleService.refill('app')
+    })
+  </script>
 </body>
 </html>
