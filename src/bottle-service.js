@@ -80,6 +80,7 @@ self.addEventListener('fetch', function (event) {
 // to communicate with this service worker
 self.onmessage = function onMessage(event) {
   console.log('message to bottle-service worker', event.data);
+  initDataStore()
 
   switch (event.data.cmd) {
     case 'print': {

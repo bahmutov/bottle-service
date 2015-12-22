@@ -1,6 +1,9 @@
 # bottle-service
 > Instant web applications restored from ServiceWorker cache
 
+[Live demo](https://bottle-service.herokuapp.com/) - might be asleep on Heroku,
+wait 10 seconds to start.
+
 ![page source](page-source.png)
 
 Related: 
