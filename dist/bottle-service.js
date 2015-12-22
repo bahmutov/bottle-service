@@ -3,25 +3,30 @@
 */
 /* global self, Response, Promise */
 var myName = 'bottle-service';
-var cacheName = myName + '-v1';
 console.log(myName, 'startup');
 
 var dataStore;
+
+function initDataStore() {
+  if (!dataStore) {
+    dataStore = {
+      name: myName,
+      html: '',
+      id: ''
+    }
+  }
+}
 
 console.log('data store at start', dataStore)
 
 self.addEventListener('install', function (event) {
   console.log(myName, 'installed');
-  dataStore = {
-    name: 'bottle-service',
-    storeName: 'fragments',
-    html: '',
-    id: ''
-  }
+  initDataStore()
 });
 
 self.addEventListener('activate', function () {
   console.log(myName, 'activated');
+  initDataStore()
   console.log('data store', dataStore)
 });
 
