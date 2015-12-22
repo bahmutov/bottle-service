@@ -12,6 +12,7 @@
 
   <button id="add">Add item to the list</button>
   <button id="print">Print current bottle contents</button>
+  <button id="clear">Clear cached HTML</button>
 
   <script src="bottle.js"></script>
   <script>
@@ -26,10 +27,10 @@
       bottleService.refill('app')
     })
 
-    document.getElementById('print').addEventListener('click', function () {
-      console.log('printing what is in the bottle')
-      bottleService.print()
-    })
+    document.getElementById('print')
+      .addEventListener('click', bottleService.print)
+    document.getElementById('clear')
+      .addEventListener('click', bottleService.clear)
   </script>
 </body>
 </html>

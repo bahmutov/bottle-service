@@ -47,13 +47,17 @@
   var serviceScriptUrl = getCurrentScriptFolder() + 'bottle-service.js';
   var scope = '/';
 
+  var send = function mockSend() {
+    console.error('Bottle service not initialized yet')
+  };
+
   function registeredWorker(registration) {
     la(registration, 'missing service worker registration');
     la(registration.active, 'missing active service worker');
     la(isFunction(registration.active.postMessage),
       'expected function postMessage to communicate with service worker');
 
-    var send = registration.active.postMessage.bind(registration.active);
+    send = registration.active.postMessage.bind(registration.active);
     var info = '\nbottle-service - .\n' +
       'I have a valid service-turtle, use `bottleService` object to update cached page';
     console.log(info);
@@ -78,26 +82,6 @@
     }
     */
 
-    root.bottleService = {
-      refill: function refill(id) {
-        console.log('sending html back to the bottle service for element with id', id)
-        var el = document.getElementById(id)
-        la(el, 'could not find element with id', id)
-        var html = el.innerHTML
-        console.log(html)
-        send({
-          cmd: 'refill',
-          html: html,
-          id: id
-        })
-      },
-      print: function print() {
-        send({
-          cmd: 'print'
-        })
-      }
-    }
-
     registration.active.onmessage = function messageFromServiceWorker(e) {
       console.log('received message from the service worker', e);
     };
@@ -110,5 +94,30 @@
   root.navigator.serviceWorker.register(serviceScriptUrl, { scope: scope })
     .then(registeredWorker)
     .catch(onError);
+
+  root.bottleService = {
+    refill: function refill(id) {
+      console.log('sending html back to the bottle service for element with id', id)
+      var el = document.getElementById(id)
+      la(el, 'could not find element with id', id)
+      var html = el.innerHTML
+      console.log(html)
+      send({
+        cmd: 'refill',
+        html: html,
+        id: id
+      })
+    },
+    print: function print() {
+      send({
+        cmd: 'print'
+      })
+    },
+    clear: function clear() {
+      send({
+        cmd: 'clear'
+      })
+    }
+  }
 
 }(window));

@@ -59,14 +59,36 @@ self.addEventListener('fetch', function (event) {
 
   // text/html; charset=UTF-8
 
-  return fetch(event.request).then(function (response) {
-    if (dataStore.html) {
-      console.log('fetched latest', response.url, 'need to update')
-      console.log('element "%s" with html "%s" ...',
-        dataStore.id, dataStore.html.substr(0, 5))
-    }
-    return response
-  })
+  event.respondWith(
+    fetch(event.request).then(function (response) {
+      if (dataStore.html) {
+        console.log('fetched latest', response.url, 'need to update')
+        console.log('element "%s" with html "%s" ...',
+          dataStore.id, dataStore.html.substr(0, 5))
+        var copy = response.clone()
+        return copy.text().then(function (pageHtml) {
+          console.log('inserting our html')
+          var toReplace = '<div id="app"></div>'
+          var newFragment = '<div id="app">\n' + dataStore.html + '\n</div>'
+          pageHtml = pageHtml.replace(toReplace, newFragment)
+
+          console.log('page html')
+          console.log(pageHtml)
+
+          var responseOptions = {
+            status: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8'
+            }
+          }
+          return new Response(pageHtml, responseOptions)
+        })
+
+      } else {
+        return response
+      }
+    })
+  )
 
   /*
   event.respondWith(
@@ -135,6 +157,7 @@ self.onmessage = function onMessage(event) {
     }
     case 'clear': {
       dataStore.html = ''
+      console.log('cleared cache html')
       return;
     }
     case 'refill': {
