@@ -11,13 +11,24 @@
   <div id="app"></div>
 
   <button id="add">Add item to the list</button>
+  <button id="print">Print current bottle contents</button>
 
   <script src="bottle.js"></script>
   <script>
     console.log('page code')
     document.getElementById('add').addEventListener('click', function () {
       console.log('adding item to the list')
+      var el = document.getElementById('app')
+      var div = document.createElement('div')
+      var text = document.createTextNode('hi there')
+      div.appendChild(text)
+      el.appendChild(div)
       bottleService.refill('app')
+    })
+
+    document.getElementById('print').addEventListener('click', function () {
+      console.log('printing what is in the bottle')
+      bottleService.print()
     })
   </script>
 </body>

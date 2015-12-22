@@ -58,6 +58,7 @@
       'I have a valid service-turtle, use `bottleService` object to update cached page';
     console.log(info);
 
+    /*
     function sendMock(url, options) {
       la(isUnemptyString(url), 'expected url pattern', url);
 
@@ -75,18 +76,24 @@
         options: options
       });
     }
+    */
 
     root.bottleService = {
       refill: function refill(id) {
         console.log('sending html back to the bottle service for element with id', id)
         var el = document.getElementById(id)
         la(el, 'could not find element with id', id)
-        var html = el.outerHTML
+        var html = el.innerHTML
         console.log(html)
         send({
           cmd: 'refill',
           html: html,
           id: id
+        })
+      },
+      print: function print() {
+        send({
+          cmd: 'print'
         })
       }
     }

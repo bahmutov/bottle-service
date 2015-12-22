@@ -5,20 +5,23 @@
 var myName = 'bottle-service';
 console.log(myName, 'startup');
 
+var dataStore;
+
+console.log('data store at start', dataStore)
+
 self.addEventListener('install', function () {
   console.log(myName, 'installed');
+  dataStore = {
+    name: 'bottle-service',
+    storeName: 'fragments',
+    html: ''
+  }
 });
 
 self.addEventListener('activate', function () {
   console.log(myName, 'activated');
+  console.log('data store', dataStore)
 });
-
-// data store stuff
-var dataStore = {
-  name: 'bottle-service',
-  storeName: 'fragments',
-  html: ''
-}
 
 /*
 var request = indexedDB.open(dataStore.name, 1.0)
@@ -86,13 +89,20 @@ self.onmessage = function onMessage(event) {
   console.log('message to bottle-service worker', event.data);
 
   switch (event.data.cmd) {
+    case 'print': {
+      console.log('bottle service has')
+      console.log(dataStore)
+      return;
+    }
     case 'clear': {
       dataStore.html = ''
       return;
-    },
+    }
     case 'refill': {
       dataStore.html = event.data.html
       dataStore.id = event.data.id
+      console.log('saved new html for id', event.data.id)
+      return;
     }
 
     /*
