@@ -6,7 +6,7 @@ wait 10 seconds to start.
 
 ![page source](page-source.png)
 
-Related: 
+## Related
 
 * Dynamic page rewriting on start [hydrate-vue-todo](https://github.com/bahmutov/hydrate-vue-todo)
 * Fast application start from pre-rendered HTML 
