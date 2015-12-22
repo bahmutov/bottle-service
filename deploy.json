@@ -1,0 +1,11 @@
+{
+  "gh-pages": {
+    "options": {
+      "base": "dist"
+    },
+    "src": [
+      "index.html",
+      "*.js"
+    ]
+  }
+}

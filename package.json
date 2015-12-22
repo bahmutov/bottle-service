@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "build": "cp src/bottle.js src/bottle-service.js dist/"
+    "build": "cp src/bottle.js src/bottle-service.js dist/",
+    "deploy": "grunty grunt-gh-pages gh-pages deploy.json"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,9 @@
   },
   "homepage": "https://github.com/bahmutov/bottle-service#readme",
   "devDependencies": {
+    "grunt": "0.4.5",
+    "grunt-gh-pages": "1.0.0",
+    "grunty": "0.2.0",
     "semantic-release": "^4.3.5"
   }
 }
