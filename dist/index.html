@@ -65,9 +65,14 @@
     <h3>How to use</h3>
     <p>Load the page first - I assume you have already done this, if you are reading this</p>
     <p>Reload the page - now the service worker has started</p>
-    <p>Click "Add ..." button several times, you should see new items in the list.
-    Reload the page - you should see the items you have added right away - they are part
-    of the loaded page, <strong>not added dynamically later</strong></p>
+    <p>Click "Add ..." button several times, you should see new items in the list.</p>
+    <p>Reload the page - you should see the items you have added right away - they are part
+    of the loaded page, <strong>not added dynamically later</strong>. You can confirm
+    this by inspecting the downloaded page's source or the contents of the page in the Network tab.</p>
+    <h4>Note</h4>
+    <p>Currently, the data is stored in the local variable inside ServiceWorker, and it gets
+    reset when the service worker goes to STOPPED state after a few seconds. I will move
+    the stored data to some kind of permanent storage</p>
   </div>
 
   <script src="bottle.js"></script>
