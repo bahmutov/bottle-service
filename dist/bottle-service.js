@@ -15,15 +15,9 @@ self.addEventListener('install', function (event) {
   dataStore = {
     name: 'bottle-service',
     storeName: 'fragments',
-    html: ''
+    html: '',
+    id: ''
   }
-
-  /*
-  event.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      return cache.addAll(['index.html'])
-    })
-  )*/
 });
 
 self.addEventListener('activate', function () {
@@ -31,23 +25,10 @@ self.addEventListener('activate', function () {
   console.log('data store', dataStore)
 });
 
-/*
-var request = indexedDB.open(dataStore.name, 1.0)
-request.onsuccess(function (e) {
-  console.log('opened indexed db', dataStore.name)
-  dataStore.db = e.target.result
-  var store = dataStore.db.createObjectStore(dataStore.storeName, { keyPath: 'timestamp' })
-})
-
-// Note: the mocks stay valid even during website reload
-var mocks;
-*/
-
 function isIndexPageRequest(event) {
-  // TODO remove hardcoded index.html
   return event &&
     event.request &&
-    event.request.url === 'http://localhost:3004/'
+    event.request.url === location.origin + '/'
 }
 
 self.addEventListener('fetch', function (event) {
@@ -57,23 +38,22 @@ self.addEventListener('fetch', function (event) {
 
   console.log(myName, 'fetching index page', event.request.url);
 
-  // text/html; charset=UTF-8
-
   event.respondWith(
     fetch(event.request).then(function (response) {
-      if (dataStore && dataStore.html) {
+      if (dataStore && dataStore.html && dataStore.id) {
         console.log('fetched latest', response.url, 'need to update')
         console.log('element "%s" with html "%s" ...',
-          dataStore.id, dataStore.html.substr(0, 5))
+          dataStore.id, dataStore.html.substr(0, 15))
         var copy = response.clone()
         return copy.text().then(function (pageHtml) {
           console.log('inserting our html')
-          var toReplace = '<div id="app"></div>'
-          var newFragment = '<div id="app">\n' + dataStore.html + '\n</div>'
+          var toReplace = '<div id="' + dataStore.id + '"></div>'
+          var newFragment = '<div id="' + dataStore.id + '">\n'
+            + dataStore.html + '\n</div>'
           pageHtml = pageHtml.replace(toReplace, newFragment)
 
-          console.log('page html')
-          console.log(pageHtml)
+          // console.log('page html')
+          // console.log(pageHtml)
 
           var responseOptions = {
             status: 200,
@@ -89,59 +69,6 @@ self.addEventListener('fetch', function (event) {
       }
     })
   )
-
-  /*
-  event.respondWith(
-    caches.open(cacheName).then(function(cache) {
-      return cache.match(event.request).then(function(response) {
-        if (response) {
-          console.log('found cached response', response.url)
-          return response
-        }
-        fetch(event.request).then(function(response) {
-          console.log('fetched and caching response', response.url)
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
-   );
-  */
-
-  /*
-  mocks = mocks || {};
-
-  Object.keys(mocks).forEach(function (url) {
-    var urlReg = new RegExp(url);
-    if (urlReg.test(event.request.url)) {
-      var mockData = mocks[url];
-      var options = mockData.options || {};
-
-      var responseOptions = {
-        status: options.code || options.status || options.statusCode,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json; charset=utf-8'
-        }
-      };
-
-      var body = JSON.stringify(options.body || options.data);
-      var response = new Response(body, responseOptions);
-
-      if (options.timeout) {
-
-        event.respondWith(new Promise(function (resolve) {
-          setTimeout(function () {
-            resolve(response);
-          }, options.timeout);
-        }));
-
-      } else {
-        event.respondWith(response);
-      }
-    }
-  });*/
-
 });
 
 // use window.navigator.serviceWorker.controller.postMessage('hi')
@@ -151,11 +78,12 @@ self.onmessage = function onMessage(event) {
 
   switch (event.data.cmd) {
     case 'print': {
-      console.log('bottle service has')
+      console.log('bottle service has id "%s"', dataStore.id)
       console.log(dataStore)
       return;
     }
     case 'clear': {
+      dataStore.id = ''
       dataStore.html = ''
       console.log('cleared cache html')
       return;
