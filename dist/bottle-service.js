@@ -3,10 +3,13 @@
 /*
   This is ServiceWorker code
 */
-/* global self, Response, Promise, location, fetch */
+/* global self, Response, Promise, location, fetch, caches */
 var myName = 'bottle-service'
 console.log(myName, 'startup')
 
+// Poor man's async "localStorage" on top of Cache
+// https://developer.mozilla.org/en-US/docs/Web/API/Cache
+// TODO factor into separate module
 function dataStore () {
   return caches.open(myName + '-v1')
     .then(function (cache) {
@@ -77,14 +80,14 @@ self.addEventListener('fetch', function (event) {
                   }
                 }
                 return new Response(pageHtml, responseOptions)
-            })
-          } else {
+              })
+            } else {
+              return response
+            }
+          }, function notFound () {
             return response
-          }
-        }, function notFound () {
-          return response
-        })
-    })
+          })
+      })
   )
 })
 
@@ -92,6 +95,8 @@ self.addEventListener('fetch', function (event) {
 // to communicate with this service worker
 self.onmessage = function onMessage (event) {
   console.log('message to bottle-service worker', event.data)
+
+  // TODO how to use application name?
 
   dataStore().then(function (store) {
     switch (event.data.cmd) {

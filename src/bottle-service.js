@@ -96,6 +96,8 @@ self.addEventListener('fetch', function (event) {
 self.onmessage = function onMessage (event) {
   console.log('message to bottle-service worker', event.data)
 
+  // TODO how to use application name?
+
   dataStore().then(function (store) {
     switch (event.data.cmd) {
       case 'print': {
