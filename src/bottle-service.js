@@ -101,7 +101,7 @@ self.addEventListener('fetch', function (event) {
 // use window.navigator.serviceWorker.controller.postMessage('hi')
 // to communicate with this service worker
 self.onmessage = function onMessage (event) {
-  console.log('message to bottle-service worker', event.data)
+  console.log('message to bottle-service worker cmd', event.data && event.data.cmd)
 
   // TODO how to use application name?
 
