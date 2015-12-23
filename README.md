@@ -1,6 +1,9 @@
 # bottle-service
 > Instant web applications restored from ServiceWorker cache
 
+[![Build status][bottle-service-ci-image] ][bottle-service-ci-url]
+[![semantic-release][semantic-image] ][semantic-url]
+
 [Live demo](https://bottle-service.herokuapp.com/) - might be asleep on Heroku,
 wait 10 seconds to start.
 
@@ -51,3 +54,8 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
+[bottle-service-ci-image]: https://travis-ci.org/bahmutov/bottle-service.png?branch=master
+[bottle-service-ci-url]: https://travis-ci.org/bahmutov/bottle-service
+[semantic-image]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
+[semantic-url]: https://github.com/semantic-release/semantic-release
