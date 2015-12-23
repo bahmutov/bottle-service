@@ -4,7 +4,7 @@
   "main": "index.js",
   "version": "0.0.0-semantic-release",
   "files": [
-    "dist"
+    "dist/*.js"
   ],
   "scripts": {
     "test": "npm run lint",
@@ -13,7 +13,8 @@
     "build": "cp src/bottle.js src/bottle-service.js dist/",
     "deploy": "grunty grunt-gh-pages gh-pages deploy.json",
     "start": "http-server dist -c-1",
-    "commit": "commit-wizard"
+    "commit": "commit-wizard",
+    "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";"
   },
   "repository": {
     "type": "git",
@@ -45,7 +46,7 @@
     "semantic-release": "^4.3.5",
     "standard": "5.4.1"
   },
-  "private": true,
+  "private": false,
   "config": {
     "pre-git": {
       "commit-msg": [
