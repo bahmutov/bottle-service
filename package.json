@@ -55,7 +55,9 @@
       "pre-commit": [
         "npm run lint"
       ],
-      "pre-push": [],
+      "pre-push": [
+        "npm run size"
+      ],
       "post-commit": [],
       "post-merge": []
     }
