@@ -7,11 +7,13 @@
     "dist"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint",
+    "lint": "standard src/*.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "build": "cp src/bottle.js src/bottle-service.js dist/",
     "deploy": "grunty grunt-gh-pages gh-pages deploy.json",
-    "start": "http-server dist -c-1"
+    "start": "http-server dist -c-1",
+    "commit": "commit-wizard"
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,22 @@
     "grunt": "0.4.5",
     "grunt-gh-pages": "1.0.0",
     "grunty": "0.2.0",
-    "semantic-release": "^4.3.5"
+    "pre-git": "3.1.1",
+    "semantic-release": "^4.3.5",
+    "standard": "5.4.1"
+  },
+  "private": true,
+  "config": {
+    "pre-git": {
+      "commit-msg": [
+        "simple"
+      ],
+      "pre-commit": [
+        "npm run lint"
+      ],
+      "pre-push": [],
+      "post-commit": [],
+      "post-merge": []
+    }
   }
 }

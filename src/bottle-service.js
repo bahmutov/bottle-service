@@ -1,13 +1,15 @@
+'use strict'
+
 /*
   This is ServiceWorker code
 */
-/* global self, Response, Promise */
-var myName = 'bottle-service';
-console.log(myName, 'startup');
+/* global self, Response, Promise, location, fetch */
+var myName = 'bottle-service'
+console.log(myName, 'startup')
 
-var dataStore;
+var dataStore
 
-function initDataStore() {
+function initDataStore () {
   if (!dataStore) {
     dataStore = {
       name: myName,
@@ -20,17 +22,17 @@ function initDataStore() {
 console.log('data store at start', dataStore)
 
 self.addEventListener('install', function (event) {
-  console.log(myName, 'installed');
+  console.log(myName, 'installed')
   initDataStore()
-});
+})
 
 self.addEventListener('activate', function () {
-  console.log(myName, 'activated');
+  console.log(myName, 'activated')
   initDataStore()
   console.log('data store', dataStore)
-});
+})
 
-function isIndexPageRequest(event) {
+function isIndexPageRequest (event) {
   return event &&
     event.request &&
     event.request.url === location.origin + '/'
@@ -38,10 +40,10 @@ function isIndexPageRequest(event) {
 
 self.addEventListener('fetch', function (event) {
   if (!isIndexPageRequest(event)) {
-    return fetch(event.request);
+    return fetch(event.request)
   }
 
-  console.log(myName, 'fetching index page', event.request.url);
+  console.log(myName, 'fetching index page', event.request.url)
 
   event.respondWith(
     fetch(event.request).then(function (response) {
@@ -53,8 +55,8 @@ self.addEventListener('fetch', function (event) {
         return copy.text().then(function (pageHtml) {
           console.log('inserting our html')
           var toReplace = '<div id="' + dataStore.id + '"></div>'
-          var newFragment = '<div id="' + dataStore.id + '">\n'
-            + dataStore.html + '\n</div>'
+          var newFragment = '<div id="' + dataStore.id + '">\n' +
+            dataStore.html + '\n</div>'
           pageHtml = pageHtml.replace(toReplace, newFragment)
 
           // console.log('page html')
@@ -63,45 +65,44 @@ self.addEventListener('fetch', function (event) {
           var responseOptions = {
             status: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html charset=UTF-8'
             }
           }
           return new Response(pageHtml, responseOptions)
         })
-
       } else {
         return response
       }
     })
   )
-});
+})
 
 // use window.navigator.serviceWorker.controller.postMessage('hi')
 // to communicate with this service worker
-self.onmessage = function onMessage(event) {
-  console.log('message to bottle-service worker', event.data);
+self.onmessage = function onMessage (event) {
+  console.log('message to bottle-service worker', event.data)
   initDataStore()
 
   switch (event.data.cmd) {
     case 'print': {
       console.log('bottle service has id "%s"', dataStore.id)
       console.log(dataStore)
-      return;
+      return
     }
     case 'clear': {
       dataStore.id = ''
       dataStore.html = ''
       console.log('cleared cache html')
-      return;
+      return
     }
     case 'refill': {
       dataStore.html = event.data.html
       dataStore.id = event.data.id
       console.log('saved new html for id', event.data.id)
-      return;
+      return
     }
     default: {
-      console.error(name, 'unknown command', event.data)
+      console.error(myName, 'unknown command', event.data)
     }
   }
-};
+}
