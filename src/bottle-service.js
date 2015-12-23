@@ -65,10 +65,17 @@ self.addEventListener('fetch', function (event) {
               var copy = response.clone()
               return copy.text().then(function (pageHtml) {
                 console.log('inserting our html')
-                var toReplace = '<div id="' + contents.id + '"></div>'
-                var newFragment = '<div id="' + contents.id + '">\n' +
-                  contents.html + '\n</div>'
-                pageHtml = pageHtml.replace(toReplace, newFragment)
+                // HACK using id in the CLOSING TAG to find fragment
+                var toReplaceStart = '<div id="' + contents.id + '">'
+                var toReplaceFinish = '</div id="' + contents.id + '">'
+                var startIndex = pageHtml.indexOf(toReplaceStart)
+                var finishIndex = pageHtml.indexOf(toReplaceFinish)
+                if (startIndex !== -1 && finishIndex > startIndex) {
+                  console.log('found fragment')
+                  pageHtml = pageHtml.substr(0, startIndex + toReplaceStart.length) +
+                    '\n' + contents.html + '\n' +
+                    pageHtml.substr(finishIndex)
+                }
 
                 // console.log('page html')
                 // console.log(pageHtml)

@@ -13,8 +13,10 @@
     "build": "cp src/bottle.js src/bottle-service.js dist/",
     "deploy": "grunty grunt-gh-pages gh-pages deploy.json",
     "start": "http-server dist -c-1",
+    "dev-start": "http-server dist -c-1 -p 3006",
     "commit": "commit-wizard",
-    "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";"
+    "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
+    "issues": "git-issues"
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,7 @@
     "http-server": "0.8.5"
   },
   "devDependencies": {
+    "git-issues": "1.2.0",
     "grunt": "0.4.5",
     "grunt-gh-pages": "1.0.0",
     "grunty": "0.2.0",

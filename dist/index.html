@@ -19,7 +19,8 @@
   thus there is no blinking / initial pause. If you inspect the fetched page's source
   in the Network tab you will see the updated HTML on each reload.</p>
   <p>The self-rewriting portion is below</p>
-  <div id="app"></div>
+  <!-- terrible hack to quickly remove inner contents - set the id on the closing tag -->
+  <div id="app">some content here already</div id="app">
 
   <div class="controls">
     Controls
