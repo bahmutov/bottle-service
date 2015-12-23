@@ -61,9 +61,9 @@
   }
 
   function onError (err) {
-    if (err.message.indexOf('missing active')) {
+    if (err.message.indexOf('missing active') !== -1) {
       // the service worker is installed
-      window.reload()
+      window.location.reload()
     } else {
       console.error('bottle service error', err)
     }
