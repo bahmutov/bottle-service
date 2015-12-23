@@ -88,7 +88,12 @@
   }
 
   function onError(err) {
-    console.error('bottle service error', err);
+    if (err.message.indexOf('missing active')) {
+      // the service worker is installed
+      window.reload();
+    } else {
+      console.error('bottle service error', err);
+    }
   }
 
   root.navigator.serviceWorker.register(serviceScriptUrl, { scope: scope })

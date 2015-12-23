@@ -1,0 +1,27 @@
+.hidden {
+  visibility: hidden;
+  display: none;
+}
+body {
+  padding: 2em;
+  font-family: Didot, 'Didot LT STD', 'Hoefler Text', 'Garamond', 'Times New Roman', serif;
+  font-size: larger;
+  color: #333333;
+}
+button {
+  padding: 5px 5px;
+  background-color: white;
+  font-size: large;
+}
+a {
+  text-decoration: none;
+  font-family: monospace;
+  font-size: large;
+}
+.controls {
+  margin-top: 1em;
+  padding: 1em 1em;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  background-color: #fefefe;
+}

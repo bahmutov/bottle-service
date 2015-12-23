@@ -5,7 +5,8 @@
     },
     "src": [
       "index.html",
-      "*.js"
+      "*.js",
+      "*.css"
     ]
   }
 }
