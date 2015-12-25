@@ -7,12 +7,61 @@
 [![semantic-release][semantic-image] ][semantic-url]
 
 [Live demo](https://bottle-service.herokuapp.com/) - might be asleep on Heroku,
-wait 10 seconds to start.
+wait 10 seconds to start, please use Chrome Desktop for now
+
+[Instal app demo](https://instant-todo.herokuapp.com/) - TodoMVC that is instant on
+page reload, also hosted on Heroku, and needs Chrome browser for now
 
 ![page source](page-source.png)
 
+## Api
+
+This library attaches itself as `bottleService` object to the 'window'. Every time
+you want to store HTML snapshot for an element with id 'myApp', call
+
+```js
+// "my-app-name" will be used in the future to allow separate parts of the
+// page to be saved separately
+// <div id="myApp"> // controlled by the web app </div>
+// application has been rendered
+bottleService.refill('my-app-name', 'myApp')
+```
+
+There are a couple of secondary api calls
+
+```js
+bottleService.clear('my-app-name'); // delete whatever is stored in the ServiceWorker cache
+bottleService.print('my-app-name'); // prints the stored text to console
+```
+
+## Example
+
+See [dist/index.html](dist/index.html) that includes the "application" code.
+Every time the user clicks "Add item" button, the application code adds a new DOM node,
+then tells the bottle service to store the new snapshot
+
+```js
+var applicationName = 'bottle-demo'
+document.getElementById('add').addEventListener('click', function () {
+  var el = document.getElementById('app')
+  var div = document.createElement('div')
+  var text = document.createTextNode('hi there')
+  div.appendChild(text)
+  el.appendChild(div)
+  // store HTML snapshot
+  bottleService.refill(applicationName, 'app')
+})
+```
+
+When the page loads, the ServiceWorker will intercept `index.html` and will insert
+the saved HTML snapshot into the page before returning it back to the browser for rendering.
+Thus there is no page rewriting on load, no flicker, etc.
+
 ## Related
 
+* Instant web apps without page flicker or loading screens, 
+  [blog post](http://glebbahmutov.com/blog/instant-web-application/), 
+  [source repo](https://github.com/bahmutov/instant-vdom-todo)
 * Dynamic page rewriting on start [hydrate-vue-todo](https://github.com/bahmutov/hydrate-vue-todo)
 * Fast application start from pre-rendered HTML 
   [hydrate-vdom-todo](https://github.com/bahmutov/hydrate-vdom-todo)
