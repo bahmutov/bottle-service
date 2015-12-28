@@ -49,7 +49,7 @@
 	/*
 	  This is ServiceWorker code
 	*/
-	/* global self, Response, Promise, location, fetch, caches */
+	/* global self, Response, Promise, location, fetch */
 	var myName = 'bottle-service'
 	console.log(myName, 'startup')
 

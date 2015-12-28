@@ -79,7 +79,7 @@
 
       var el = document.getElementById(id)
       la(el, 'could not find element with id', id)
-      var html = el.innerHTML
+      var html = el.innerHTML.trim()
       send({
         cmd: 'refill',
         html: html,
