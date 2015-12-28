@@ -14,6 +14,18 @@ page reload, also hosted on Heroku, and needs Chrome browser for now
 
 ![page source](page-source.png)
 
+## Browser support
+
+### Chrome 
+
+* Nothing to do, `ServiceWorker` should be enabled by default
+
+### Firefox
+
+* Open `about:config`
+* Set the `dom.serviceWorkers.enabled` setting to **true**
+* Set the `dom.serviceWorkers.interception.enabled` setting to **true**
+
 ## Api
 
 This library attaches itself as `bottleService` object to the 'window'. Every time
