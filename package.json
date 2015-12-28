@@ -10,7 +10,8 @@
     "test": "npm run lint",
     "lint": "standard src/*.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "build": "cp src/bottle.js src/bottle-service.js dist/",
+    "build": "cp src/bottle.js dist/ && npm run webpack",
+    "webpack": "webpack",
     "deploy": "grunty grunt-gh-pages gh-pages deploy.json",
     "start": "http-server dist -c-1",
     "dev-start": "http-server dist -c-1 -p 3006",
@@ -47,7 +48,8 @@
     "grunty": "0.2.0",
     "pre-git": "3.1.1",
     "semantic-release": "^4.3.5",
-    "standard": "5.4.1"
+    "standard": "5.4.1",
+    "webpack": "1.12.9"
   },
   "private": false,
   "config": {
