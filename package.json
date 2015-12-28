@@ -39,6 +39,7 @@
   },
   "homepage": "https://github.com/bahmutov/bottle-service#readme",
   "dependencies": {
+    "caches-storage": "1.1.0",
     "http-server": "0.8.5"
   },
   "devDependencies": {

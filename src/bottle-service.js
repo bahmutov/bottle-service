@@ -3,29 +3,13 @@
 /*
   This is ServiceWorker code
 */
-/* global self, Response, Promise, location, fetch, caches */
+/* global self, Response, Promise, location, fetch */
 var myName = 'bottle-service'
 console.log(myName, 'startup')
 
-// Poor man's async "localStorage" on top of Cache
-// https://developer.mozilla.org/en-US/docs/Web/API/Cache
-// TODO factor into separate module
 function dataStore () {
-  return caches.open(myName + '-v1')
-    .then(function (cache) {
-      return {
-        write: function (key, data) {
-          return cache.put(key, new Response(JSON.stringify(data)))
-        },
-        read: function (key) {
-          return cache.match(key)
-            .then(function (res) {
-              return res &&
-                res.text().then(JSON.parse)
-            })
-        }
-      }
-    })
+  var cachesStorage = require('caches-storage')
+  return cachesStorage(myName)
 }
 
 self.addEventListener('install', function (event) {
@@ -54,7 +38,7 @@ self.addEventListener('fetch', function (event) {
       .then(function (response) {
         return dataStore()
           .then(function (store) {
-            return store.read('contents')
+            return store.getItem('contents')
           })
           .then(function (contents) {
             if (contents && contents.html && contents.id) {
@@ -108,7 +92,7 @@ self.onmessage = function onMessage (event) {
   dataStore().then(function (store) {
     switch (event.data.cmd) {
       case 'print': {
-        return store.read('contents')
+        return store.getItem('contents')
           .then(function (res) {
             console.log('bottle service has contents')
             console.log(res)
@@ -116,10 +100,10 @@ self.onmessage = function onMessage (event) {
       }
       case 'clear': {
         console.log('clearing the bottle')
-        return store.write('contents', {})
+        return store.setItem('contents', {})
       }
       case 'refill': {
-        return store.write('contents', {
+        return store.setItem('contents', {
           html: event.data.html,
           id: event.data.id
         }).then(function () {
