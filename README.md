@@ -78,6 +78,13 @@ Thus there is no page rewriting on load, no flicker, etc.
 * Fast application start from pre-rendered HTML 
   [hydrate-vdom-todo](https://github.com/bahmutov/hydrate-vdom-todo)
 
+## Related projects using ServiceWorkers
+
+* [express-service](https://github.com/bahmutov/express-service) - run ExpressJS server
+  inside ServiceWorker
+* [service-turtle](https://github.com/bahmutov/service-turtle) - Flexible http request 
+  interception using ServiceWorker
+
 ### Small print
 
 Author: Gleb Bahmutov &copy; 2015
