@@ -9,7 +9,7 @@
 [Live demo](https://bottle-service.herokuapp.com/) - might be asleep on Heroku,
 wait 10 seconds to start, please use Chrome Desktop for now
 
-[Instal app demo](https://instant-todo.herokuapp.com/) - TodoMVC that is instant on
+[Instant app demo](https://instant-todo.herokuapp.com/) - TodoMVC that is instant on
 page reload, also hosted on Heroku, and needs Chrome browser for now
 
 ![page source](page-source.png)
