@@ -66,10 +66,11 @@
 	  console.log(myName, 'activated')
 	})
 
+	var baseHref = location.href.substr(0, location.href.indexOf('bottle-service.js'))
 	function isIndexPageRequest (event) {
 	  return event &&
 	    event.request &&
-	    event.request.url === location.origin + '/'
+	    event.request.url === baseHref
 	}
 
 	self.addEventListener('fetch', function (event) {
