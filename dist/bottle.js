@@ -38,7 +38,7 @@
   }
 
   var serviceScriptUrl = getCurrentScriptFolder() + 'bottle-service.js'
-  var scope = '/'
+  var scope = window.location.pathname
 
   var send = function mockSend () {
     console.error('Bottle service not initialized yet')

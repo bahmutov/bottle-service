@@ -6,11 +6,10 @@
 [![Build status][bottle-service-ci-image] ][bottle-service-ci-url]
 [![semantic-release][semantic-image] ][semantic-url]
 
-[Live demo](https://bottle-service.herokuapp.com/) - might be asleep on Heroku,
-wait 10 seconds to start, please use Chrome Desktop for now
+[Live demo](https://glebbahmutov.com/bottle-service/) - please use Chrome or Opera Desktop
 
 [Instant app demo](https://instant-todo.herokuapp.com/) - TodoMVC that is instant on
-page reload, also hosted on Heroku, and needs Chrome browser for now
+page reload, hosted on free Heroku dyno, and needs Chrome browser for now
 
 ![page source](page-source.png)
 
