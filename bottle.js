@@ -38,6 +38,7 @@
   }
 
   var serviceScriptUrl = getCurrentScriptFolder() + 'bottle-service.js'
+  // assume we are running at <domain>/pathname
   var scope = window.location.pathname
 
   var send = function mockSend () {
