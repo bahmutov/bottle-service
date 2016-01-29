@@ -1,173 +1,200 @@
-/*
-  This is ServiceWorker code
-*/
-/* global self, Response, Promise */
-var myName = 'bottle-service';
-var cacheName = myName + '-v1';
-console.log(myName, 'startup');
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
 
-var dataStore;
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
 
-console.log('data store at start', dataStore)
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
 
-self.addEventListener('install', function (event) {
-  console.log(myName, 'installed');
-  dataStore = {
-    name: 'bottle-service',
-    storeName: 'fragments',
-    html: ''
-  }
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
 
-  /*
-  event.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      return cache.addAll(['index.html'])
-    })
-  )*/
-});
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
-self.addEventListener('activate', function () {
-  console.log(myName, 'activated');
-  console.log('data store', dataStore)
-});
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
 
-/*
-var request = indexedDB.open(dataStore.name, 1.0)
-request.onsuccess(function (e) {
-  console.log('opened indexed db', dataStore.name)
-  dataStore.db = e.target.result
-  var store = dataStore.db.createObjectStore(dataStore.storeName, { keyPath: 'timestamp' })
-})
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
 
-// Note: the mocks stay valid even during website reload
-var mocks;
-*/
 
-function isIndexPageRequest(event) {
-  // TODO remove hardcoded index.html
-  return event &&
-    event.request &&
-    event.request.url === 'http://localhost:3004/'
-}
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
 
-self.addEventListener('fetch', function (event) {
-  if (!isIndexPageRequest(event)) {
-    return fetch(event.request);
-  }
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
 
-  console.log(myName, 'fetching index page', event.request.url);
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
 
-  // text/html; charset=UTF-8
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
 
-  event.respondWith(
-    fetch(event.request).then(function (response) {
-      if (dataStore && dataStore.html) {
-        console.log('fetched latest', response.url, 'need to update')
-        console.log('element "%s" with html "%s" ...',
-          dataStore.id, dataStore.html.substr(0, 5))
-        var copy = response.clone()
-        return copy.text().then(function (pageHtml) {
-          console.log('inserting our html')
-          var toReplace = '<div id="app"></div>'
-          var newFragment = '<div id="app">\n' + dataStore.html + '\n</div>'
-          pageHtml = pageHtml.replace(toReplace, newFragment)
+	'use strict'
 
-          console.log('page html')
-          console.log(pageHtml)
+	/*
+	  This is ServiceWorker code
+	*/
+	/* global self, Response, Promise, location, fetch */
+	var myName = 'bottle-service'
+	console.log(myName, 'startup')
 
-          var responseOptions = {
-            status: 200,
-            headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
-            }
-          }
-          return new Response(pageHtml, responseOptions)
-        })
+	function dataStore () {
+	  var cachesStorage = __webpack_require__(1)
+	  return cachesStorage(myName)
+	}
 
-      } else {
-        return response
-      }
-    })
-  )
+	self.addEventListener('install', function (event) {
+	  console.log(myName, 'installed')
+	})
 
-  /*
-  event.respondWith(
-    caches.open(cacheName).then(function(cache) {
-      return cache.match(event.request).then(function(response) {
-        if (response) {
-          console.log('found cached response', response.url)
-          return response
-        }
-        fetch(event.request).then(function(response) {
-          console.log('fetched and caching response', response.url)
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
-   );
-  */
+	self.addEventListener('activate', function () {
+	  console.log(myName, 'activated')
+	})
 
-  /*
-  mocks = mocks || {};
+	function isIndexPageRequest (event) {
+	  return event &&
+	    event.request &&
+	    event.request.url === location.origin + '/'
+	}
 
-  Object.keys(mocks).forEach(function (url) {
-    var urlReg = new RegExp(url);
-    if (urlReg.test(event.request.url)) {
-      var mockData = mocks[url];
-      var options = mockData.options || {};
+	self.addEventListener('fetch', function (event) {
+	  if (!isIndexPageRequest(event)) {
+	    return fetch(event.request)
+	  }
 
-      var responseOptions = {
-        status: options.code || options.status || options.statusCode,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json; charset=utf-8'
-        }
-      };
+	  console.log(myName, 'fetching index page', event.request.url)
 
-      var body = JSON.stringify(options.body || options.data);
-      var response = new Response(body, responseOptions);
+	  event.respondWith(
+	    fetch(event.request)
+	      .then(function (response) {
+	        return dataStore()
+	          .then(function (store) {
+	            return store.getItem('contents')
+	          })
+	          .then(function (contents) {
+	            if (contents && contents.html && contents.id) {
+	              console.log('fetched latest', response.url, 'need to update')
+	              console.log('element "%s" with html "%s" ...',
+	                contents.id, contents.html.substr(0, 15))
 
-      if (options.timeout) {
+	              var copy = response.clone()
+	              return copy.text().then(function (pageHtml) {
+	                console.log('inserting our html')
+	                // HACK using id in the CLOSING TAG to find fragment
+	                var toReplaceStart = '<div id="' + contents.id + '">'
+	                var toReplaceFinish = '</div id="' + contents.id + '">'
+	                var startIndex = pageHtml.indexOf(toReplaceStart)
+	                var finishIndex = pageHtml.indexOf(toReplaceFinish)
+	                if (startIndex !== -1 && finishIndex > startIndex) {
+	                  console.log('found fragment')
+	                  pageHtml = pageHtml.substr(0, startIndex + toReplaceStart.length) +
+	                    '\n' + contents.html + '\n' +
+	                    pageHtml.substr(finishIndex)
+	                }
 
-        event.respondWith(new Promise(function (resolve) {
-          setTimeout(function () {
-            resolve(response);
-          }, options.timeout);
-        }));
+	                // console.log('page html')
+	                // console.log(pageHtml)
 
-      } else {
-        event.respondWith(response);
-      }
-    }
-  });*/
+	                var responseOptions = {
+	                  status: 200,
+	                  headers: {
+	                    'Content-Type': 'text/html charset=UTF-8'
+	                  }
+	                }
+	                return new Response(pageHtml, responseOptions)
+	              })
+	            } else {
+	              return response
+	            }
+	          }, function notFound () {
+	            return response
+	          })
+	      })
+	  )
+	})
 
-});
+	// use window.navigator.serviceWorker.controller.postMessage('hi')
+	// to communicate with this service worker
+	self.onmessage = function onMessage (event) {
+	  console.log('message to bottle-service worker cmd', event.data && event.data.cmd)
 
-// use window.navigator.serviceWorker.controller.postMessage('hi')
-// to communicate with this service worker
-self.onmessage = function onMessage(event) {
-  console.log('message to bottle-service worker', event.data);
+	  // TODO how to use application name?
 
-  switch (event.data.cmd) {
-    case 'print': {
-      console.log('bottle service has')
-      console.log(dataStore)
-      return;
-    }
-    case 'clear': {
-      dataStore.html = ''
-      console.log('cleared cache html')
-      return;
-    }
-    case 'refill': {
-      dataStore.html = event.data.html
-      dataStore.id = event.data.id
-      console.log('saved new html for id', event.data.id)
-      return;
-    }
-    default: {
-      console.error(name, 'unknown command', event.data)
-    }
-  }
-};
+	  dataStore().then(function (store) {
+	    switch (event.data.cmd) {
+	      case 'print': {
+	        return store.getItem('contents')
+	          .then(function (res) {
+	            console.log('bottle service has contents')
+	            console.log(res)
+	          })
+	      }
+	      case 'clear': {
+	        console.log('clearing the bottle')
+	        return store.setItem('contents', {})
+	      }
+	      case 'refill': {
+	        return store.setItem('contents', {
+	          html: event.data.html,
+	          id: event.data.id
+	        }).then(function () {
+	          console.log('saved new html for id', event.data.id)
+	        })
+	      }
+	      default: {
+	        console.error(myName, 'unknown command', event.data)
+	      }
+	    }
+	  })
+	}
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	// Poor man's async "localStorage" on top of Cache
+	// https://developer.mozilla.org/en-US/docs/Web/API/Cache
+	if (typeof caches === 'undefined') {
+	  throw new Error('Cannot find object caches?! Cannot init cache-storage')
+	}
+	/* global caches, Response */
+	function dataStore (name) {
+	  var id = name ? name + '-v1' : 'cache-storage-v1'
+	  return caches.open(id)
+	    .then(function (cache) {
+	      return {
+	        setItem: function (key, data) {
+	          return cache.put(key, new Response(JSON.stringify(data)))
+	        },
+	        getItem: function (key) {
+	          return cache.match(key)
+	            .then(function (res) {
+	              return res &&
+	                res.text().then(JSON.parse)
+	            })
+	        }
+	      }
+	    })
+	}
+
+	module.exports = dataStore
+
+
+/***/ }
+/******/ ]);
